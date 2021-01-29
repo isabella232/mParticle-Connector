@@ -7,6 +7,8 @@
  */
 package org.forgerock.openicf.connectors.mParticle;
 
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.identityconnectors.common.StringUtil;
 import org.identityconnectors.common.security.GuardedString;
 import org.identityconnectors.common.security.SecurityUtil;
@@ -49,6 +51,14 @@ public class mParticleConfiguration extends AbstractConfiguration implements Sta
     private String[] mParticleAttributes = {};
 
     private HttpClient client;
+
+    private HttpClientConnectionManager conManager = null;
+
+    /**
+     * Maximum http connections
+     */
+    private Integer maximumConnections = 10;
+
 
 
     /**
@@ -121,6 +131,24 @@ public class mParticleConfiguration extends AbstractConfiguration implements Sta
             }
         }
         return this.client;
+    }
+
+    public HttpClientConnectionManager ConnectionManager() {
+        if (null == conManager) {
+            synchronized (this) {
+                if (null == conManager) {
+                    this.conManager = getClientManager();
+                }
+            }
+        }
+        return this.conManager;
+    }
+
+    private HttpClientConnectionManager getClientManager() {
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+        cm.setDefaultMaxPerRoute(maximumConnections);
+        cm.setMaxTotal(maximumConnections);
+        return cm;
     }
 
     /**

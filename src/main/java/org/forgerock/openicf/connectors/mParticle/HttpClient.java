@@ -11,7 +11,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.identityconnectors.common.logging.Log;
 import org.identityconnectors.common.security.SecurityUtil;
 import org.identityconnectors.framework.common.exceptions.ConnectorException;
@@ -26,7 +26,6 @@ public class HttpClient {
     private final String authHeader;
     public static final BasicResponseHandler HANDLER_INSTANCE = new BasicResponseHandler();
 
-
     /**
      * Constructor
      *
@@ -36,7 +35,7 @@ public class HttpClient {
         this.config = config;
         authHeader = "Basic " + new String(Base64.encodeBase64((config.getServerKey() + ":" + SecurityUtil.decrypt(
                 config.getServerSecret())).getBytes(StandardCharsets.ISO_8859_1)));
-        this.client = HttpClientBuilder.create().build();
+        this.client = HttpClients.custom().setConnectionManager(config.ConnectionManager()).build();
     }
 
     /**

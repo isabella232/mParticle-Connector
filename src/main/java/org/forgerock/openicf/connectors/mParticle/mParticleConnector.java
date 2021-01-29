@@ -34,8 +34,8 @@ import org.identityconnectors.framework.common.objects.Uid;
 import org.identityconnectors.framework.common.objects.filter.Filter;
 import org.identityconnectors.framework.common.objects.filter.FilterTranslator;
 import org.identityconnectors.framework.spi.Configuration;
+import org.identityconnectors.framework.spi.Connector;
 import org.identityconnectors.framework.spi.ConnectorClass;
-import org.identityconnectors.framework.spi.PoolableConnector;
 import org.identityconnectors.framework.spi.operations.CreateOp;
 import org.identityconnectors.framework.spi.operations.SchemaOp;
 import org.identityconnectors.framework.spi.operations.SearchOp;
@@ -50,7 +50,7 @@ import org.json.JSONObject;
 @ConnectorClass(
         displayNameKey = "mParticle.connector.display",
         configurationClass = mParticleConfiguration.class)
-public class mParticleConnector implements PoolableConnector, CreateOp, TestOp, UpdateOp, SchemaOp, SearchOp<Filter> {
+public class mParticleConnector implements Connector, CreateOp, TestOp, UpdateOp, SchemaOp, SearchOp<Filter> {
 
     /**
      * Setup logging for the {@link mParticleConnector}.
@@ -210,10 +210,16 @@ public class mParticleConnector implements PoolableConnector, CreateOp, TestOp, 
         if (ObjectClass.ACCOUNT.equals(objectClass)) {
             if (query != null) {
                 Uid uid = FrameworkUtil.getUidIfGetOperation(query);
-                ConnectorObjectBuilder cob = new ConnectorObjectBuilder();
-                cob.setUid(uid.getUidValue());
-                cob.setObjectClass(ObjectClass.ACCOUNT);
-                handler.handle(cob.build());
+                if (uid != null) {
+                    ConnectorObjectBuilder cob = new ConnectorObjectBuilder();
+                    cob.setUid(uid.getUidValue());
+                    cob.setName(uid.getUidValue());
+                    cob.setObjectClass(ObjectClass.ACCOUNT);
+                    handler.handle(cob.build());
+                } else {
+                    throw new UnsupportedOperationException("Only get operations are supported");
+                }
+
             }
         }
     }

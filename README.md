@@ -20,12 +20,11 @@ The mParticle Connector lets administrators integrate the mParticle events API i
 ## Usage
 
 To deploy this connector:
-1. Download the complied jar.
+1. Download or build the mParticle Connector jar
 2. Next, copy the jar into the `openidm/connectors` directory
 3. Copy the `translation.json` to `openidm/ui/admin/default/locales/en/translation.json` (make sure to update
  translation.json with any previous changes you've made for your deployment)
-4. Finally, copy `org.forgerock.openicf.connectors.mParticle.mParticleConnector_1.4.htm` to `openidm/ui/admin/default
-/templates/admin/connector/`
+4. Finally, copy `org.forgerock.openicf.connectors.mParticle.mParticleConnector_1.5.html` to `openidm/ui/admin/default/templates/admin/connector/`
 
 ### mParticle Connector Configuration
 
@@ -73,7 +72,7 @@ To deploy this connector:
     {
       "event_type": "custom_event",
       "data": {
-        "custom_event_type": "other",
+        "custom_event_type": "user_preference",
         "event_name": "registration"
       }
     }
