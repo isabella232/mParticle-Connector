@@ -127,7 +127,7 @@ public class mParticleConnector implements PoolableConnector, CreateOp, TestOp, 
         JSONArray eventsArray = new JSONArray();
         JSONObject userIdentities = new JSONObject();
         JSONObject event = new JSONObject().put("event_type", "custom_event");
-        JSONObject data = new JSONObject().put("custom_event_type", "other").put("event_name", eventName);
+        JSONObject data = new JSONObject().put("custom_event_type", "user_preference").put("event_name", eventName);
         Name name = AttributeUtil.getNameFromAttributes(createAttributes);
         JSONObject attributes = new JSONObject();
         for (Attribute attribute : createAttributes) {

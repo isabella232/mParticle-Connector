@@ -13,17 +13,17 @@
     <parent>
         <groupId>org.forgerock.openicf.connectors</groupId>
         <artifactId>connectors-parent</artifactId>
-        <version>1.5.9.1</version>
+        <version>1.5.16.0</version>
         <relativePath></relativePath>
     </parent>
     <artifactId>mParticle-connector</artifactId>
-    <version>1.4.0.0-SNAPSHOT</version>
+    <version>1.5</version>
     <packaging>bundle</packaging>
     <name>mParticle Connector</name>
     <description>Connector for mParticle</description>
     <properties>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
         <connectorPackage>org.forgerock.openicf.connectors.mParticle</connectorPackage>
         <connectorClass>mParticleConnector</connectorClass>
         <framework.compatibilityVersion>1.4</framework.compatibilityVersion>
