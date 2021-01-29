@@ -4,14 +4,21 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HeaderElement;
+import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeaderElementIterator;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.identityconnectors.common.logging.Log;
 import org.identityconnectors.common.security.SecurityUtil;
 import org.identityconnectors.framework.common.exceptions.ConnectorException;
@@ -25,6 +32,23 @@ public class HttpClient {
     private final mParticleConfiguration config;
     private final String authHeader;
     public static final BasicResponseHandler HANDLER_INSTANCE = new BasicResponseHandler();
+    ConnectionKeepAliveStrategy conKeepAliveStrategy = new ConnectionKeepAliveStrategy() {
+        @Override
+        public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+            HeaderElementIterator it = new BasicHeaderElementIterator
+                    (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+            while (it.hasNext()) {
+                HeaderElement he = it.nextElement();
+                String param = he.getName();
+                String value = he.getValue();
+                if (value != null && param.equalsIgnoreCase
+                        ("timeout")) {
+                    return Long.parseLong(value) * 1000;
+                }
+            }
+            return 5 * 1000;
+        }
+    };
 
     /**
      * Constructor
@@ -35,7 +59,8 @@ public class HttpClient {
         this.config = config;
         authHeader = "Basic " + new String(Base64.encodeBase64((config.getServerKey() + ":" + SecurityUtil.decrypt(
                 config.getServerSecret())).getBytes(StandardCharsets.ISO_8859_1)));
-        this.client = HttpClients.custom().setConnectionManager(config.ConnectionManager()).build();
+        this.client = HttpClients.custom().setKeepAliveStrategy(conKeepAliveStrategy).setConnectionManager(
+                config.ConnectionManager()).build();
     }
 
     /**
@@ -52,6 +77,7 @@ public class HttpClient {
         }
 
         request.addHeader(HttpHeaders.AUTHORIZATION, authHeader);
+        request.addHeader(HttpHeaders.CONNECTION, "keep-alive");
         request.addHeader("Cache-Control", "no-cache");
         try {
             return this.client.execute(request, HANDLER_INSTANCE);

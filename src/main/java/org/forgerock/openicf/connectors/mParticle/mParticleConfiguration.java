@@ -146,6 +146,7 @@ public class mParticleConfiguration extends AbstractConfiguration implements Sta
 
     private HttpClientConnectionManager getClientManager() {
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+        cm.setValidateAfterInactivity(2000);
         cm.setDefaultMaxPerRoute(maximumConnections);
         cm.setMaxTotal(maximumConnections);
         return cm;
