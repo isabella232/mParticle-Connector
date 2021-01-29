@@ -79,3 +79,7 @@ To deploy this connector:
   ]
 }
 ```
+
+ ## Notes
+ 1. Make sure the `mainTrustStore` located in `openidm/conf/secrets.json` contains the cacert for `inbound.mparticle.com`.
+  If it doesn't, SSL exceptions will occur when the request to mParticle is executed.
