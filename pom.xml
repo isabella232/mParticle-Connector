@@ -13,8 +13,7 @@
     <parent>
         <groupId>org.forgerock.openicf.connectors</groupId>
         <artifactId>connectors-parent</artifactId>
-        <version>1.5.16.0</version>
-        <relativePath></relativePath>
+        <version>1.5.2.0</version>
     </parent>
     <artifactId>mParticle-connector</artifactId>
     <version>1.5</version>
@@ -33,7 +32,7 @@
         <dependency>
             <groupId>org.forgerock.openicf.framework</groupId>
             <artifactId>connector-framework</artifactId>
-            <version>1.5.16.0</version>
+            <version>1.5.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
